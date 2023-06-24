@@ -15,13 +15,15 @@ const Wordle = () => {
   const [solution, setSolution] = useState<string>();
 
   const [guesses, setGuesses] = useState(Array(6).fill(null));
+  const [currentGuess, setCurrentGuess] = useState("");
 
   useEffect(() => {
-    const handleType = (e: KeyboardEvent) => {};
-
+    const handleType = (e: KeyboardEvent) => {
+      setCurrentGuess((oldGuess) => oldGuess + e.key);
+    };
     window.addEventListener("keydown", handleType);
 
-    return window.removeEventListener("keydown", handleType);
+    return () => window.removeEventListener("keydown", handleType);
   }, []);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ const Wordle = () => {
       {guesses.map((guess, i) => (
         <Line key={i} guess={guess ?? ""} />
       ))}
+      {currentGuess}
     </section>
   );
 };
