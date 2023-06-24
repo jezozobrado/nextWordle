@@ -11,7 +11,10 @@ const Line = ({ guess }: Props) => {
   for (let i = 0; i < WORD_LENGTH; i++) {
     const char = guess[i];
     tiles.push(
-      <div key={i} className="w-20 h-20 border border-solid border-black">
+      <div
+        key={i}
+        className="w-20 h-20 border border-solid border-black text-4xl flex justify-center items-center"
+      >
         {char}
       </div>
     );
