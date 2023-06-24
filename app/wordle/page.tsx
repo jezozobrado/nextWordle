@@ -13,17 +13,31 @@ interface IWord {
 
 const Wordle = () => {
   const [words, setWords] = useState<IWord[]>();
-  const [solution, setSolution] = useState<string>();
+  const [solution, setSolution] = useState<string>("");
 
-  const [guesses, setGuesses] = useState(Array(6).fill(null));
+  const [guesses, setGuesses] = useState<string[]>(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
+  const [currentColor, setCurrentColor] = useState<string[]>(Array(5).fill(""));
+  const [colors, setColors] = useState<string[][]>(
+    Array(6).fill(Array(5).fill(""))
+  );
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
 
   useEffect(() => {
+    setColors((oldColors) =>
+      oldColors.map((colors, i) => {
+        if (i === guessCount - 1) return currentColor;
+        return colors;
+      })
+    );
+  }, [currentColor, guessCount]);
+  console.table(colors);
+
+  console.log(solution);
+  useEffect(() => {
     const handleType = (e: KeyboardEvent) => {
       //if guess is equal to solution, its game over
-      if (currentGuess === solution) return setIsGameOver(true);
 
       //if ENTER and guess is incomplete, do nothing
       if (e.key === "Enter" && currentGuess.length < 5) return;
@@ -34,6 +48,17 @@ const Wordle = () => {
 
       //if ENTER and guess is complete, lock in guess, reset currentGuess, increment guessCount
       if (e.key === "Enter" && currentGuess.length >= 5) {
+        for (let i = 0; i < 5; i++) {
+          if (currentGuess.charAt(i) === solution.charAt(i)) {
+            setCurrentColor((oldColor) =>
+              oldColor.map((o, j) => {
+                if (i === j) return "green";
+                return o;
+              })
+            );
+          }
+        }
+
         setGuesses((oldGuesses) =>
           oldGuesses.map((oldGuess, i) => {
             if (i === guessCount) return currentGuess.toUpperCase();
@@ -50,13 +75,15 @@ const Wordle = () => {
       //if key is not alphabet, do nothing
       if (!LETTERS.includes(e.code)) return;
 
+      if (currentGuess === solution) return setIsGameOver(true);
+
       //else append key to currentGuess
-      setCurrentGuess((oldGuess) => oldGuess + e.key);
+      setCurrentGuess((oldGuess) => oldGuess + e.key.toUpperCase());
     };
     window.addEventListener("keydown", handleType);
 
     return () => window.removeEventListener("keydown", handleType);
-  }, [currentGuess, guessCount]);
+  }, [currentGuess, guessCount, solution]);
 
   useEffect(() => {
     if (!words) return;
@@ -85,7 +112,11 @@ const Wordle = () => {
         const isCurrentGuess =
           i === guesses.findIndex((guess) => guess === null);
         return (
-          <Line key={i} guess={isCurrentGuess ? currentGuess : guess ?? ""} />
+          <Line
+            key={i}
+            guess={isCurrentGuess ? currentGuess : guess ?? ""}
+            color={colors[i]}
+          />
         );
       })}
     </section>

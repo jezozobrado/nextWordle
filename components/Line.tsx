@@ -2,20 +2,20 @@ import React from "react";
 
 interface Props {
   guess: string;
+  color: string[];
 }
-const Line = ({ guess }: Props) => {
+const Line = ({ guess, color }: Props) => {
   const WORD_LENGTH = 5;
 
   const tiles = [];
 
   for (let i = 0; i < WORD_LENGTH; i++) {
-    const char = guess[i];
     tiles.push(
       <div
         key={i}
-        className="w-20 h-20 border border-solid border-black text-4xl flex justify-center items-center"
+        className={`w-20 h-20 border border-solid border-black text-4xl flex justify-center items-center bg-${color[i]}-300`}
       >
-        {char}
+        {guess[i]}
       </div>
     );
   }
