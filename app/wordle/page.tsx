@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Line from "@components/Line";
 
 interface IWord {
   day: string;
@@ -12,6 +13,16 @@ interface IWord {
 const Wordle = () => {
   const [words, setWords] = useState<IWord[]>();
   const [solution, setSolution] = useState<string>();
+
+  const [guesses, setGuesses] = useState(Array(6).fill(null));
+
+  useEffect(() => {
+    const handleType = (e: KeyboardEvent) => {};
+
+    window.addEventListener("keydown", handleType);
+
+    return window.removeEventListener("keydown", handleType);
+  }, []);
 
   useEffect(() => {
     if (!words) return;
@@ -34,7 +45,13 @@ const Wordle = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  return <section>{solution}</section>;
+  return (
+    <section className="flex flex-col justify-center items-center w-full gap-[5px]">
+      {guesses.map((guess, i) => (
+        <Line key={i} guess={guess ?? ""} />
+      ))}
+    </section>
+  );
 };
 
 export default Wordle;
