@@ -42,10 +42,9 @@ const Wordle = () => {
     currentColorRef.current = Array(5).fill("lightgray");
   }, [colors]);
 
-  // useEffect(() => {
-  //   if (solution && solution === currentGuess) setIsGameOver(true);
-  //   if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
-  // }, [currentGuess]);
+  useEffect(() => {
+    if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
+  }, [currentGuess]);
 
   useEffect(() => {
     const handleType = (e: KeyboardEvent) => {
@@ -73,7 +72,7 @@ const Wordle = () => {
         }
 
         for (let i = 0; i < 5; i++) {
-          if (solutionRef.current.charAt(i) === "?") continue;
+          if (currentGuessRef.current.charAt(i) === "?") continue;
           if (solutionRef.current.includes(currentGuessRef.current.charAt(i))) {
             currentColorRef.current = currentColorRef.current.map((o, j) => {
               if (i === j) {
@@ -81,14 +80,15 @@ const Wordle = () => {
               }
               return o;
             });
-            currentGuessRef.current = mask(currentGuessRef.current, i);
+
             solutionRef.current = solutionRef.current.replace(
               currentGuessRef.current.charAt(i),
               "?"
             );
+            currentGuessRef.current = mask(currentGuessRef.current, i);
           }
         }
-        solutionRef.current = solution;
+
         setGuesses((oldGuesses) =>
           oldGuesses.map((oldGuess, i) => {
             if (i === guessCount) return currentGuess.toUpperCase();
@@ -97,14 +97,15 @@ const Wordle = () => {
         );
 
         setCurrentGuess("");
+
         currentGuessRef.current = "";
+        solutionRef.current = solution;
 
         // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
 
-        if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
+        // if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
         if (solution && solution === currentGuess) setIsGameOver(true);
-
         return;
       }
 
@@ -163,6 +164,9 @@ const Wordle = () => {
         );
       })}
       {isGameOver && <span>Congratulations! You got the word.</span>}
+      {guesses[5] !== null && !isGameOver && (
+        <span>{`Oops, the word is ${solution}.`}</span>
+      )}
     </section>
   );
 };
