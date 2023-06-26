@@ -1,5 +1,6 @@
 import KEYS from "@constants/keyboard";
 import { LuDelete } from "react-icons/lu";
+import KeyboardLine from "./KeyboardLine";
 
 interface Props {
   colors: { [letter: string]: string };
@@ -7,39 +8,12 @@ interface Props {
 const Keyboard = ({ colors }: Props) => {
   return (
     <section className="flex flex-col gap-1 mt-5">
-      <div className="flex w-[650px] justify-between gap-1">
-        {KEYS.slice(0, 10).map((letter, i) => (
-          <div
-            key={i}
-            className="border h-10 flex justify-center items-center rounded-md  flex-auto"
-            style={{ background: `${colors[letter]}` }}
-          >
-            {letter.toUpperCase()}
-          </div>
-        ))}
-      </div>
-      <div className="flex w-[650px] justify-between gap-1">
-        {KEYS.slice(10, 19).map((letter, i) => (
-          <div
-            key={i}
-            className="border  h-10 flex justify-center items-center rounded-md flex-auto"
-            style={{ background: `${colors[letter]}` }}
-          >
-            {letter.toUpperCase()}
-          </div>
-        ))}
-      </div>
-      <div className="flex w-[650px]  justify-between gap-1">
-        {["DEL", ...KEYS.slice(19), "ENTER"].map((letter, i) => (
-          <div
-            key={i}
-            className="border h-10 flex justify-center items-center rounded-md flex-auto"
-            style={{ background: `${colors[letter]}` }}
-          >
-            {letter === "DEL" ? <LuDelete size="30px" /> : letter.toUpperCase()}
-          </div>
-        ))}
-      </div>
+      <KeyboardLine keys={KEYS.slice(0, 10)} keyColorMap={colors} />
+      <KeyboardLine keys={KEYS.slice(10, 19)} keyColorMap={colors} />
+      <KeyboardLine
+        keys={["BACKSPACE", ...KEYS.slice(19), "ENTER"]}
+        keyColorMap={colors}
+      />
     </section>
   );
 };

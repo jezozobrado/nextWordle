@@ -7,6 +7,7 @@ import LETTERS from "@constants/letters";
 import mask from "@utils/mask";
 import Keyboard from "@components/Keyboard";
 import KEYS from "@constants/keyboard";
+import useWordleStore from "@store/wordle";
 
 interface IWord {
   day: string;
@@ -19,7 +20,11 @@ const Wordle = () => {
   const [solution, setSolution] = useState<string>("");
 
   const [guesses, setGuesses] = useState<string[]>(Array(6).fill(null));
-  const [currentGuess, setCurrentGuess] = useState("");
+  const currentGuess = useWordleStore((s) => s.currentGuess);
+  const setCurrentGuess = useWordleStore((s) => s.setCurrentGuess);
+  const popCurrentGuess = useWordleStore((s) => s.popCurrentGuess);
+  const resetCurrentGuess = useWordleStore((s) => s.resetCurrentGuess);
+  // const [currentGuess, setCurrentGuess] = useState("");
 
   const [colors, setColors] = useState<string[][]>(
     Array(6).fill(Array(5).fill(""))
@@ -73,8 +78,7 @@ const Wordle = () => {
       if (e.key === "Enter" && currentGuess.length < 5) return;
 
       //if BACKSPACE, delete one character
-      if (e.key === "Backspace")
-        return setCurrentGuess(currentGuess.slice(0, -1));
+      if (e.key === "Backspace") return popCurrentGuess();
 
       //if ENTER and guess is complete, lock in guess, reset currentGuess, increment guessCount
       if (e.key === "Enter" && currentGuess.length >= 5) {
@@ -116,7 +120,7 @@ const Wordle = () => {
           })
         );
 
-        setCurrentGuess("");
+        resetCurrentGuess();
         currentGuessRef.current = "";
         solutionRef.current = solution;
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
@@ -133,7 +137,7 @@ const Wordle = () => {
       if (!LETTERS.includes(e.code)) return;
 
       //else append key to currentGuess
-      setCurrentGuess((oldGuess) => oldGuess + e.key.toUpperCase());
+      setCurrentGuess(e.key.toUpperCase());
     };
 
     window.addEventListener("keydown", handleType);
