@@ -5,6 +5,8 @@ import axios from "axios";
 import Line from "@components/Line";
 import LETTERS from "@constants/letters";
 import mask from "@utils/mask";
+import Keyboard from "@components/Keyboard";
+import KEYS from "@constants/keyboard";
 
 interface IWord {
   day: string;
@@ -24,10 +26,34 @@ const Wordle = () => {
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
+  const [keys, setKeys] = useState<{ [letter: string]: string }>({});
 
   const currentColorRef = useRef<string[]>(Array(5).fill("lightgray"));
   const currentGuessRef = useRef("");
   const solutionRef = useRef("");
+
+  const keysRef = useRef(
+    Object.fromEntries(KEYS.map((key) => [key.toUpperCase(), ""]))
+  );
+
+  // useEffect(() => {
+  //   if (!Object.keys(keys).length) return;
+  //   setKeys(keysRef.current);
+  // }, [guessCount]);
+
+  useEffect(() => {
+    for (let i = 0; i < 5; i++) {
+      if (!guessCount) break;
+      if (keysRef.current[guesses[guessCount - 1].charAt(i)] === "lightgreen")
+        continue;
+      keysRef.current = {
+        ...keysRef.current,
+        [guesses[guessCount - 1].charAt(i)]: colors[guessCount - 1][i],
+      };
+    }
+
+    console.log(keysRef.current, colors, guesses);
+  }, [colors, guesses, guessCount]);
 
   useEffect(() => {
     setColors((oldColors) =>
@@ -97,11 +123,8 @@ const Wordle = () => {
         );
 
         setCurrentGuess("");
-
         currentGuessRef.current = "";
         solutionRef.current = solution;
-
-        // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
 
         // if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
@@ -116,7 +139,6 @@ const Wordle = () => {
       if (!LETTERS.includes(e.code)) return;
 
       //else append key to currentGuess
-
       setCurrentGuess((oldGuess) => oldGuess + e.key.toUpperCase());
     };
 
@@ -163,10 +185,13 @@ const Wordle = () => {
           />
         );
       })}
+
       {isGameOver && <span>Congratulations! You got the word.</span>}
       {guesses[5] !== null && !isGameOver && (
         <span>{`Oops, the word is ${solution}.`}</span>
       )}
+
+      <Keyboard colors={keysRef.current} />
     </section>
   );
 };
