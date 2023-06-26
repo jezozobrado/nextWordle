@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Line from "@components/Line";
 import LETTERS from "@constants/letters";
@@ -17,28 +17,35 @@ const Wordle = () => {
 
   const [guesses, setGuesses] = useState<string[]>(Array(6).fill(null));
   const [currentGuess, setCurrentGuess] = useState("");
-  const [currentColor, setCurrentColor] = useState<string[]>(Array(5).fill(""));
+
   const [colors, setColors] = useState<string[][]>(
     Array(6).fill(Array(5).fill(""))
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
 
+  const currentColorRef = useRef<string[]>(Array(5).fill(""));
+
   useEffect(() => {
     setColors((oldColors) =>
       oldColors.map((colors, i) => {
-        if (i === guessCount - 1) return currentColor;
+        if (i === guessCount - 1) return currentColorRef.current;
         return colors;
       })
     );
-  }, [currentColor, guessCount]);
-  console.table(colors);
+  }, [guessCount]);
 
-  console.log(solution);
+  useEffect(() => {
+    currentColorRef.current = Array(5).fill("");
+  }, [colors]);
+
+  useEffect(() => {
+    if (solution && solution === currentGuess) setIsGameOver(true);
+  }, [currentGuess]);
+
   useEffect(() => {
     const handleType = (e: KeyboardEvent) => {
-      //if guess is equal to solution, its game over
-
+      if (isGameOver) return;
       //if ENTER and guess is incomplete, do nothing
       if (e.key === "Enter" && currentGuess.length < 5) return;
 
@@ -50,12 +57,10 @@ const Wordle = () => {
       if (e.key === "Enter" && currentGuess.length >= 5) {
         for (let i = 0; i < 5; i++) {
           if (currentGuess.charAt(i) === solution.charAt(i)) {
-            setCurrentColor((oldColor) =>
-              oldColor.map((o, j) => {
-                if (i === j) return "green";
-                return o;
-              })
-            );
+            currentColorRef.current = currentColorRef.current.map((o, j) => {
+              if (i === j) return "lightgreen";
+              return o;
+            });
           }
         }
 
@@ -66,6 +71,7 @@ const Wordle = () => {
           })
         );
         setCurrentGuess("");
+        // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
       }
 
@@ -75,11 +81,10 @@ const Wordle = () => {
       //if key is not alphabet, do nothing
       if (!LETTERS.includes(e.code)) return;
 
-      if (currentGuess === solution) return setIsGameOver(true);
-
       //else append key to currentGuess
       setCurrentGuess((oldGuess) => oldGuess + e.key.toUpperCase());
     };
+
     window.addEventListener("keydown", handleType);
 
     return () => window.removeEventListener("keydown", handleType);
@@ -92,6 +97,10 @@ const Wordle = () => {
     const randomWord = wordBank[Math.floor(Math.random() * words.length)];
     setSolution(randomWord);
   }, [words]);
+
+  useEffect(() => console.log(solution), [solution]);
+
+  useEffect(() => console.table(colors), [colors]);
 
   useEffect(() => {
     axios
@@ -111,6 +120,7 @@ const Wordle = () => {
       {guesses.map((guess, i) => {
         const isCurrentGuess =
           i === guesses.findIndex((guess) => guess === null);
+
         return (
           <Line
             key={i}

@@ -13,12 +13,14 @@ const Line = ({ guess, color }: Props) => {
     tiles.push(
       <div
         key={i}
-        className={`w-20 h-20 border border-solid border-black text-4xl flex justify-center items-center bg-${color[i]}-300`}
+        className={`w-20 h-20 border border-solid border-black text-4xl flex justify-center items-center`}
+        style={{ background: `${color[i]}` }}
       >
         {guess[i]}
       </div>
     );
   }
+
   return <div className="flex gap-[5px]">{tiles}</div>;
 };
 
