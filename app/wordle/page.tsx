@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Line from "@components/Line";
 import LETTERS from "@constants/letters";
+import mask from "@utils/mask";
 
 interface IWord {
   day: string;
@@ -24,7 +25,7 @@ const Wordle = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
 
-  const currentColorRef = useRef<string[]>(Array(5).fill("gray"));
+  const currentColorRef = useRef<string[]>(Array(5).fill("lightgray"));
   const currentGuessRef = useRef("");
   const solutionRef = useRef("");
 
@@ -38,14 +39,13 @@ const Wordle = () => {
   }, [guessCount]);
 
   useEffect(() => {
-    currentColorRef.current = Array(5).fill("");
+    currentColorRef.current = Array(5).fill("lightgray");
   }, [colors]);
 
-  useEffect(() => {
-    if (solution && solution === currentGuess) setIsGameOver(true);
-
-    if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
-  }, [currentGuess]);
+  // useEffect(() => {
+  //   if (solution && solution === currentGuess) setIsGameOver(true);
+  //   if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
+  // }, [currentGuess]);
 
   useEffect(() => {
     const handleType = (e: KeyboardEvent) => {
@@ -67,43 +67,25 @@ const Wordle = () => {
               }
               return o;
             });
-            currentGuessRef.current =
-              currentGuessRef.current.slice(0, i) +
-              "?" +
-              currentGuessRef.current.slice(i + 1);
-            solutionRef.current =
-              solutionRef.current.slice(0, i) +
-              "?" +
-              solutionRef.current.slice(i + 1);
+            currentGuessRef.current = mask(currentGuessRef.current, i);
+            solutionRef.current = mask(solutionRef.current, i);
           }
         }
-
-        // console.log(currentGuessRef.current, solutionRef.current);
 
         for (let i = 0; i < 5; i++) {
           if (solutionRef.current.charAt(i) === "?") continue;
           if (solutionRef.current.includes(currentGuessRef.current.charAt(i))) {
             currentColorRef.current = currentColorRef.current.map((o, j) => {
               if (i === j) {
-                return "yellow";
+                return "lightyellow";
               }
               return o;
             });
-            currentGuessRef.current =
-              currentGuessRef.current.slice(0, i) +
-              "?" +
-              currentGuessRef.current.slice(i + 1);
+            currentGuessRef.current = mask(currentGuessRef.current, i);
             solutionRef.current = solutionRef.current.replace(
               currentGuessRef.current.charAt(i),
               "?"
             );
-          } else {
-            currentColorRef.current = currentColorRef.current.map((o, j) => {
-              if (i === j) {
-                return "gray";
-              }
-              return o;
-            });
           }
         }
         solutionRef.current = solution;
@@ -119,6 +101,10 @@ const Wordle = () => {
 
         // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
+
+        if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
+        if (solution && solution === currentGuess) setIsGameOver(true);
+
         return;
       }
 
@@ -147,13 +133,7 @@ const Wordle = () => {
     solutionRef.current = randomWord;
   }, [words]);
 
-  // useEffect(() => {
-  //   solutionRef = solution;
-  // }, [solution]);
-
   useEffect(() => console.log(solution), [solution]);
-
-  useEffect(() => console.table(colors), [colors]);
 
   useEffect(() => {
     axios
@@ -182,6 +162,7 @@ const Wordle = () => {
           />
         );
       })}
+      {isGameOver && <span>Congratulations! You got the word.</span>}
     </section>
   );
 };
