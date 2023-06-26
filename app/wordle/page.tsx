@@ -36,11 +36,6 @@ const Wordle = () => {
     Object.fromEntries(KEYS.map((key) => [key.toUpperCase(), ""]))
   );
 
-  // useEffect(() => {
-  //   if (!Object.keys(keys).length) return;
-  //   setKeys(keysRef.current);
-  // }, [guessCount]);
-
   useEffect(() => {
     for (let i = 0; i < 5; i++) {
       if (!guessCount) break;
@@ -51,8 +46,7 @@ const Wordle = () => {
         [guesses[guessCount - 1].charAt(i)]: colors[guessCount - 1][i],
       };
     }
-
-    console.log(keysRef.current, colors, guesses);
+    setKeys(keysRef.current);
   }, [colors, guesses, guessCount]);
 
   useEffect(() => {
@@ -191,7 +185,7 @@ const Wordle = () => {
         <span>{`Oops, the word is ${solution}.`}</span>
       )}
 
-      <Keyboard colors={keysRef.current} />
+      <Keyboard colors={keys} />
     </section>
   );
 };

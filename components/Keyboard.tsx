@@ -4,7 +4,6 @@ interface Props {
   colors: { [letter: string]: string };
 }
 const Keyboard = ({ colors }: Props) => {
-  console.log("ulul", colors);
   return (
     <section className="flex w-[500px] flex-wrap gap-1">
       {KEYS.map((letter, i) => (
