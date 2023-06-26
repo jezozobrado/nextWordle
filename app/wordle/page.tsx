@@ -24,8 +24,9 @@ const Wordle = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
 
-  const currentColorRef = useRef<string[]>(Array(5).fill(""));
-  let { current: currentGuessRef } = useRef("");
+  const currentColorRef = useRef<string[]>(Array(5).fill("gray"));
+  const currentGuessRef = useRef("");
+  const solutionRef = useRef("");
 
   useEffect(() => {
     setColors((oldColors) =>
@@ -43,7 +44,7 @@ const Wordle = () => {
   useEffect(() => {
     if (solution && solution === currentGuess) setIsGameOver(true);
 
-    if (currentGuess) currentGuessRef = currentGuess; //used for yellow checking
+    if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
   }, [currentGuess]);
 
   useEffect(() => {
@@ -66,12 +67,46 @@ const Wordle = () => {
               }
               return o;
             });
-            currentGuessRef =
-              currentGuessRef.slice(0, i) + "?" + currentGuessRef.slice(i + 1);
+            currentGuessRef.current =
+              currentGuessRef.current.slice(0, i) +
+              "?" +
+              currentGuessRef.current.slice(i + 1);
+            solutionRef.current =
+              solutionRef.current.slice(0, i) +
+              "?" +
+              solutionRef.current.slice(i + 1);
           }
         }
-        console.log("x", currentGuessRef);
 
+        // console.log(currentGuessRef.current, solutionRef.current);
+
+        for (let i = 0; i < 5; i++) {
+          if (solutionRef.current.charAt(i) === "?") continue;
+          if (solutionRef.current.includes(currentGuessRef.current.charAt(i))) {
+            currentColorRef.current = currentColorRef.current.map((o, j) => {
+              if (i === j) {
+                return "yellow";
+              }
+              return o;
+            });
+            currentGuessRef.current =
+              currentGuessRef.current.slice(0, i) +
+              "?" +
+              currentGuessRef.current.slice(i + 1);
+            solutionRef.current = solutionRef.current.replace(
+              currentGuessRef.current.charAt(i),
+              "?"
+            );
+          } else {
+            currentColorRef.current = currentColorRef.current.map((o, j) => {
+              if (i === j) {
+                return "gray";
+              }
+              return o;
+            });
+          }
+        }
+        solutionRef.current = solution;
         setGuesses((oldGuesses) =>
           oldGuesses.map((oldGuess, i) => {
             if (i === guessCount) return currentGuess.toUpperCase();
@@ -80,7 +115,7 @@ const Wordle = () => {
         );
 
         setCurrentGuess("");
-        currentGuessRef = "";
+        currentGuessRef.current = "";
 
         // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
@@ -109,7 +144,12 @@ const Wordle = () => {
     const wordBank = words.map((word) => word.answer);
     const randomWord = wordBank[Math.floor(Math.random() * words.length)];
     setSolution(randomWord);
+    solutionRef.current = randomWord;
   }, [words]);
+
+  // useEffect(() => {
+  //   solutionRef = solution;
+  // }, [solution]);
 
   useEffect(() => console.log(solution), [solution]);
 
