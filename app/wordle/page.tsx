@@ -25,6 +25,7 @@ const Wordle = () => {
   const [guessCount, setGuessCount] = useState(0);
 
   const currentColorRef = useRef<string[]>(Array(5).fill(""));
+  let { current: currentGuessRef } = useRef("");
 
   useEffect(() => {
     setColors((oldColors) =>
@@ -41,6 +42,8 @@ const Wordle = () => {
 
   useEffect(() => {
     if (solution && solution === currentGuess) setIsGameOver(true);
+
+    if (currentGuess) currentGuessRef = currentGuess; //used for yellow checking
   }, [currentGuess]);
 
   useEffect(() => {
@@ -58,11 +61,16 @@ const Wordle = () => {
         for (let i = 0; i < 5; i++) {
           if (currentGuess.charAt(i) === solution.charAt(i)) {
             currentColorRef.current = currentColorRef.current.map((o, j) => {
-              if (i === j) return "lightgreen";
+              if (i === j) {
+                return "lightgreen";
+              }
               return o;
             });
+            currentGuessRef =
+              currentGuessRef.slice(0, i) + "?" + currentGuessRef.slice(i + 1);
           }
         }
+        console.log("x", currentGuessRef);
 
         setGuesses((oldGuesses) =>
           oldGuesses.map((oldGuess, i) => {
@@ -70,9 +78,13 @@ const Wordle = () => {
             return oldGuess;
           })
         );
+
         setCurrentGuess("");
+        currentGuessRef = "";
+
         // setCurrentColor(Array(5).fill(""));
         setGuessCount((oldGuessCount) => oldGuessCount + 1);
+        return;
       }
 
       //if guess is complete and keys are still pressed, do nothing
@@ -82,6 +94,7 @@ const Wordle = () => {
       if (!LETTERS.includes(e.code)) return;
 
       //else append key to currentGuess
+
       setCurrentGuess((oldGuess) => oldGuess + e.key.toUpperCase());
     };
 
