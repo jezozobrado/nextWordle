@@ -1,6 +1,6 @@
 import LETTERS from "@constants/letters";
-import useIsGameOverStore from "@store/gameOver";
-import useWordleStore from "@store/wordle";
+import useIsGameOverStore from "@app/wordle/store/gameOver";
+import useWordleStore from "@app/wordle/store/wordle";
 import React from "react";
 import { LuDelete } from "react-icons/lu";
 

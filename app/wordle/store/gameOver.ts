@@ -8,7 +8,7 @@ interface IsGameOverStore {
 const useIsGameOverStore = create<IsGameOverStore>((set) => ({
   isGameOver: false,
   setIsGameOver: (bool) =>
-    set((store) => ({
+    set(() => ({
       isGameOver: bool,
     })),
 }));
