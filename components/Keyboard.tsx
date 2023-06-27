@@ -1,5 +1,4 @@
 import KEYS from "@constants/keyboard";
-import { LuDelete } from "react-icons/lu";
 import KeyboardLine from "./KeyboardLine";
 
 interface Props {
