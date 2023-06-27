@@ -185,13 +185,15 @@ const Wordle = () => {
 
     currentColorRef.current = Array(5).fill("lightgray");
     currentGuessRef.current = "";
-    // solutionRef.current = "";
-
     keysRef.current = Object.fromEntries(
       KEYS.map((key) => [key.toUpperCase(), ""])
     );
 
     // document.getElementById("logo")?.focus();
+  };
+
+  const handleGiveUp = () => {
+    handleRestart();
   };
 
   return (
@@ -215,9 +217,17 @@ const Wordle = () => {
       )}
 
       <Keyboard colors={keys} />
-      <button className="black_btn mt-5" onClick={handleRestart}>
-        Play again
-      </button>
+      <div className={`mt-4 flex w-56 justify-center items-center`}>
+        {isGameOver ? (
+          <button className="black_btn " onClick={handleRestart}>
+            Play again
+          </button>
+        ) : (
+          <button className="black_btn" onClick={handleGiveUp}>
+            Give up
+          </button>
+        )}
+      </div>
     </section>
   );
 };
