@@ -8,7 +8,7 @@ const Nav = () => {
   const isUserLoggedIn = true;
   return (
     <nav className="flex justify-between items-start w-full mb-16 pt-6 px-32 gap-20">
-      <Link className="flex gap-2 justify-center" href="/">
+      <Link className="flex gap-2 justify-center" href="/" id="logo">
         {/* <Image src="/next.svg" alt="Logo" width={30} height={30} /> */}
         <p>Wordletopia</p>
       </Link>

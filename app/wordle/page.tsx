@@ -8,6 +8,7 @@ import mask from "@utils/mask";
 import Keyboard from "@components/Keyboard";
 import KEYS from "@constants/keyboard";
 import useWordleStore from "@store/wordle";
+import useIsGameOverStore from "@store/gameOver";
 
 interface IWord {
   day: string;
@@ -28,7 +29,10 @@ const Wordle = () => {
   const [colors, setColors] = useState<string[][]>(
     Array(6).fill(Array(5).fill(""))
   );
-  const [isGameOver, setIsGameOver] = useState(false);
+  // const [isGameOver, setIsGameOver] = useState(false);
+  const isGameOver = useIsGameOverStore((s) => s.isGameOver);
+  const setIsGameOver = useIsGameOverStore((s) => s.setIsGameOver);
+
   const [guessCount, setGuessCount] = useState(0);
   const [keys, setKeys] = useState<{ [letter: string]: string }>({});
 
@@ -186,6 +190,8 @@ const Wordle = () => {
     keysRef.current = Object.fromEntries(
       KEYS.map((key) => [key.toUpperCase(), ""])
     );
+
+    // document.getElementById("logo")?.focus();
   };
 
   return (
