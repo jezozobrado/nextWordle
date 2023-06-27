@@ -13,7 +13,7 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
   const setCurrentGuess = useWordleStore((s) => s.setCurrentGuess);
   const popCurrentGuess = useWordleStore((s) => s.popCurrentGuess);
   return (
-    <div className="flex w-[650px] justify-between gap-1">
+    <div className="flex w-[600px] justify-between gap-1">
       {keys.map((letter, i) => (
         <button
           onClick={() => {
@@ -34,7 +34,7 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
           className="border h-10 flex justify-center items-center rounded-md flex-auto"
           style={{ background: `${keyColorMap[letter]}` }}
         >
-          {letter === "Backspace" ? (
+          {letter === "BACKSPACE" ? (
             <LuDelete size="24px" />
           ) : (
             letter.toUpperCase()

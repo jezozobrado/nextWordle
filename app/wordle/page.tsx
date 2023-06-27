@@ -24,7 +24,6 @@ const Wordle = () => {
   const setCurrentGuess = useWordleStore((s) => s.setCurrentGuess);
   const popCurrentGuess = useWordleStore((s) => s.popCurrentGuess);
   const resetCurrentGuess = useWordleStore((s) => s.resetCurrentGuess);
-  // const [currentGuess, setCurrentGuess] = useState("");
 
   const [colors, setColors] = useState<string[][]>(
     Array(6).fill(Array(5).fill(""))
@@ -32,6 +31,8 @@ const Wordle = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [guessCount, setGuessCount] = useState(0);
   const [keys, setKeys] = useState<{ [letter: string]: string }>({});
+
+  const [replay, setReplay] = useState(0);
 
   const currentColorRef = useRef<string[]>(Array(5).fill("lightgray"));
   const currentGuessRef = useRef("");
@@ -152,7 +153,7 @@ const Wordle = () => {
     const randomWord = wordBank[Math.floor(Math.random() * words.length)];
     setSolution(randomWord);
     solutionRef.current = randomWord;
-  }, [words]);
+  }, [words, replay]);
 
   useEffect(() => console.log(solution), [solution]);
 
@@ -168,6 +169,24 @@ const Wordle = () => {
       .then((res) => setWords(res.data.data))
       .catch((err) => console.error(err));
   }, []);
+
+  const handleRestart = () => {
+    resetCurrentGuess();
+    setColors(Array(6).fill(Array(5).fill("")));
+    setGuesses(Array(6).fill(null));
+    setIsGameOver(false);
+    setGuessCount(0);
+    setKeys({});
+    setReplay((oldCounter) => oldCounter + 1);
+
+    currentColorRef.current = Array(5).fill("lightgray");
+    currentGuessRef.current = "";
+    // solutionRef.current = "";
+
+    keysRef.current = Object.fromEntries(
+      KEYS.map((key) => [key.toUpperCase(), ""])
+    );
+  };
 
   return (
     <section className="flex flex-col justify-center items-center w-full gap-[5px]">
@@ -190,6 +209,9 @@ const Wordle = () => {
       )}
 
       <Keyboard colors={keys} />
+      <button className="black_btn mt-5" onClick={handleRestart}>
+        Play again
+      </button>
     </section>
   );
 };
