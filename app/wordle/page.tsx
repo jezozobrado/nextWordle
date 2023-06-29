@@ -9,6 +9,7 @@ import Keyboard from "@components/Keyboard";
 import KEYS from "@constants/keyboard";
 import useWordleStore from "@app/wordle/store/wordle";
 import useIsGameOverStore from "@app/wordle/store/gameOver";
+import useGuessCount from "./store/guessCount";
 
 interface IWord {
   day: string;
@@ -33,7 +34,11 @@ const Wordle = () => {
   const isGameOver = useIsGameOverStore((s) => s.isGameOver);
   const setIsGameOver = useIsGameOverStore((s) => s.setIsGameOver);
 
-  const [guessCount, setGuessCount] = useState(0);
+  // const [guessCount, setGuessCount] = useState(0);
+  const guessCount = useGuessCount((s) => s.guessCount);
+  const setGuessCount = useGuessCount((s) => s.setGuessCount);
+  const resetGuessCount = useGuessCount((s) => s.resetGuessCount);
+
   const [keys, setKeys] = useState<{ [letter: string]: string }>({});
 
   const [replay, setReplay] = useState(0);
@@ -129,7 +134,7 @@ const Wordle = () => {
         resetCurrentGuess();
         currentGuessRef.current = "";
         solutionRef.current = solution;
-        setGuessCount((oldGuessCount) => oldGuessCount + 1);
+        setGuessCount();
 
         // if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
         if (solution && solution === currentGuess) setIsGameOver(true);
@@ -180,7 +185,7 @@ const Wordle = () => {
     setColors(Array(6).fill(Array(5).fill("")));
     setGuesses(Array(6).fill(null));
     setIsGameOver(false);
-    setGuessCount(0);
+    resetGuessCount();
     setKeys({});
     setReplay((oldCounter) => oldCounter + 1);
     setIsGiveUp(false);
@@ -233,32 +238,7 @@ const Wordle = () => {
             Give up
           </button>
         )}
-        <button
-          className="black_btn"
-          onClick={() => {
-            const modal = document.querySelector(
-              "[data-modal]"
-            ) as HTMLDialogElement;
-            modal.showModal();
-          }}
-        >
-          Open modal
-        </button>
       </div>
-
-      <dialog data-modal>
-        Modal here
-        <button
-          onClick={() => {
-            const modal = document.querySelector(
-              "[data-modal]"
-            ) as HTMLDialogElement;
-            modal.close();
-          }}
-        >
-          Exit
-        </button>
-      </dialog>
     </section>
   );
 };
