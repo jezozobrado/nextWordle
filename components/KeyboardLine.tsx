@@ -1,8 +1,8 @@
-import LETTERS from "@constants/letters";
 import useIsGameOverStore from "@app/wordle/store/gameOver";
 import useWordleStore from "@app/wordle/store/wordle";
-import React from "react";
+import React, { useState } from "react";
 import { LuDelete } from "react-icons/lu";
+import { useDebounce } from "react-use";
 
 interface Props {
   keys: string[];
@@ -13,6 +13,12 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
   const currentGuess = useWordleStore((s) => s.currentGuess);
   const setCurrentGuess = useWordleStore((s) => s.setCurrentGuess);
   const popCurrentGuess = useWordleStore((s) => s.popCurrentGuess);
+
+  const [debouncedkeyColorMap, setDebouncedkeyColorMap] = useState(
+    {} as { [letter: string]: string }
+  );
+
+  useDebounce(() => setDebouncedkeyColorMap(keyColorMap), 1250, [keyColorMap]);
 
   const isGameOver = useIsGameOverStore((s) => s.isGameOver);
   return (
@@ -36,7 +42,7 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
           }}
           key={i}
           className="border h-10 flex justify-center items-center rounded-md flex-auto"
-          style={{ background: `${keyColorMap[letter]}` }}
+          style={{ background: `${debouncedkeyColorMap[letter]}` }}
         >
           {letter === "BACKSPACE" ? (
             <LuDelete size="24px" />

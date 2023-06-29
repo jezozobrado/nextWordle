@@ -30,11 +30,9 @@ const Wordle = () => {
   const [colors, setColors] = useState<string[][]>(
     Array(6).fill(Array(5).fill(""))
   );
-  // const [isGameOver, setIsGameOver] = useState(false);
   const isGameOver = useIsGameOverStore((s) => s.isGameOver);
   const setIsGameOver = useIsGameOverStore((s) => s.setIsGameOver);
 
-  // const [guessCount, setGuessCount] = useState(0);
   const guessCount = useGuessCount((s) => s.guessCount);
   const setGuessCount = useGuessCount((s) => s.setGuessCount);
   const resetGuessCount = useGuessCount((s) => s.resetGuessCount);
@@ -195,8 +193,6 @@ const Wordle = () => {
     keysRef.current = Object.fromEntries(
       KEYS.map((key) => [key.toUpperCase(), ""])
     );
-
-    // document.getElementById("logo")?.focus();
   };
 
   const handleGiveUp = () => {
