@@ -49,6 +49,11 @@ const Wordle = () => {
     );
   };
 
+  const handleCloseModal = () => {
+    const modal = document.querySelector("[data-results]") as HTMLDialogElement;
+    modal?.close();
+  };
+
   return (
     <section className="flex flex-col justify-center items-center w-full gap-[5px]">
       {guesses.map((guess, i) => {
@@ -70,10 +75,7 @@ const Wordle = () => {
             <div className="flex justify-end items-center w-full pb-2">
               <button
                 onClick={() => {
-                  const modal = document.querySelector(
-                    "[data-results]"
-                  ) as HTMLDialogElement;
-                  modal?.close();
+                  handleCloseModal();
                 }}
               >
                 <MdOutlineCancel size={25} />
@@ -92,11 +94,7 @@ const Wordle = () => {
               className="black_btn m-auto mt-5"
               onClick={() => {
                 handleRestart();
-
-                const modal = document.querySelector(
-                  "[data-results]"
-                ) as HTMLDialogElement;
-                modal.close();
+                handleCloseModal();
               }}
             >
               Play again
@@ -113,11 +111,7 @@ const Wordle = () => {
               className="black_btn m-auto mt-5"
               onClick={() => {
                 handleRestart();
-
-                const modal = document.querySelector(
-                  "[data-results]"
-                ) as HTMLDialogElement;
-                modal.close();
+                handleCloseModal();
               }}
             >
               Play again
@@ -127,6 +121,22 @@ const Wordle = () => {
       </dialog>
 
       <Keyboard colors={keys} />
+
+      {isGameOver && (
+        <button
+          className="black_btn"
+          onClick={() => {
+            const modal = document.querySelector(
+              "[data-results]"
+            ) as HTMLDialogElement;
+            modal.inert = true;
+            modal.showModal();
+            modal.inert = false;
+          }}
+        >
+          See Results
+        </button>
+      )}
     </section>
   );
 };

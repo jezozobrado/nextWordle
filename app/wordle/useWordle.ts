@@ -188,7 +188,9 @@ export const useWordle = () => {
         const modal = document.querySelector(
           "[data-results]"
         ) as HTMLDialogElement;
+        modal.inert = true;
         modal.showModal();
+        modal.inert = false;
       }
     },
     modalDelay,

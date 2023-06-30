@@ -6,7 +6,7 @@ interface Props {
 }
 const Keyboard = ({ colors }: Props) => {
   return (
-    <section className="flex flex-col gap-1 mt-5">
+    <section className="flex flex-col gap-1 my-5">
       <KeyboardLine keys={KEYS.slice(0, 10)} keyColorMap={colors} />
       <KeyboardLine keys={KEYS.slice(10, 19)} keyColorMap={colors} />
       <KeyboardLine
