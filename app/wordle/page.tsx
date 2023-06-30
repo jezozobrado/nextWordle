@@ -5,6 +5,7 @@ import Line from "@components/Line";
 import Keyboard from "@components/Keyboard";
 import KEYS from "@constants/keyboard";
 import { useWordle } from "./useWordle";
+import LineResults from "@components/LineResults";
 
 const Wordle = () => {
   const {
@@ -65,7 +66,15 @@ const Wordle = () => {
       <dialog data-results className="border rounded-lg ">
         {isGameOver && !isLoss && (
           <div>
-            <span>Congratulations! You got the word.</span>
+            <span>Congratulations! You got the word </span>
+            <span className="bg-green-300 px-1 rounded-md font-bold">
+              {solution}
+            </span>
+            <div className="flex gap-[3px] flex-col mt-3">
+              {guesses.map((guess, i) => {
+                return <LineResults key={i} color={colors[i]} />;
+              })}
+            </div>
             <button
               className="black_btn m-auto mt-5"
               onClick={() => {
@@ -83,7 +92,10 @@ const Wordle = () => {
         )}
         {guesses[5] !== null && !isGameOver && (
           <div>
-            <span>{`Oops, the word is ${solution}.`}</span>
+            <span>{`Oops, the word is `}</span>
+            <span className="bg-green-300 px-1 rounded-md font-bold">
+              {solution}
+            </span>
             <button
               className="black_btn m-auto mt-5"
               onClick={() => {
