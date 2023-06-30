@@ -1,3 +1,4 @@
+import { showKeyboardColorDelay } from "@constants/delay";
 import { create } from "zustand";
 
 interface DelayStore {
@@ -7,10 +8,10 @@ interface DelayStore {
 }
 
 const useDelayStore = create<DelayStore>((set) => ({
-  delay: 1250,
+  delay: showKeyboardColorDelay,
   setDelay: () =>
     set(() => ({
-      delay: 1250,
+      delay: showKeyboardColorDelay,
     })),
   resetDelay: () =>
     set(() => ({

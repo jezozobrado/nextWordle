@@ -12,6 +12,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --show-color-delay: 0.1s;
 }
 
 .black_btn {
@@ -34,17 +35,17 @@
 }
 
 #line > div:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: var(--show-color-delay);
 }
 
 #line > div:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: calc(var(--show-color-delay) + 0.1s);
 }
 
 #line > div:nth-child(4) {
-  animation-delay: 0.6s;
+  animation-delay: calc(var(--show-color-delay) + 0.2s);
 }
 
 #line > div:nth-child(5) {
-  animation-delay: 0.8s;
+  animation-delay: calc(var(--show-color-delay) + 0.3s);
 }

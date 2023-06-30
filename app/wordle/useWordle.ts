@@ -8,6 +8,7 @@ import useDelayStore from "./store/delay";
 import useIsGameOverStore from "./store/gameOver";
 import useGuessCount from "./store/guessCount";
 import useWordleStore from "./store/wordle";
+import { modalDelay } from "@constants/delay";
 
 interface IWord {
   day: string;
@@ -129,7 +130,7 @@ export const useWordle = () => {
             return oldGuess;
           })
         );
-        console.log(guessCount);
+
         resetCurrentGuess();
         currentGuessRef.current = "";
         solutionRef.current = solution;
@@ -137,10 +138,7 @@ export const useWordle = () => {
         setDelay();
         // if (currentGuess) currentGuessRef.current = currentGuess; //used for yellow checking
         if (solution && solution === currentGuess) setIsGameOver(true);
-        if (guessCount + 1 === 6 && solution !== currentGuess) {
-          console.log("loser");
-          setIsLoss(true);
-        }
+        if (guessCount + 1 === 6 && solution !== currentGuess) setIsLoss(true);
 
         return;
       }
@@ -193,7 +191,7 @@ export const useWordle = () => {
         modal.showModal();
       }
     },
-    1600,
+    modalDelay,
     [isGameOver, isLoss]
   );
 
