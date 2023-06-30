@@ -6,6 +6,7 @@ import Keyboard from "@components/Keyboard";
 import KEYS from "@constants/keyboard";
 import { useWordle } from "./useWordle";
 import LineResults from "@components/LineResults";
+import { MdOutlineCancel } from "react-icons/md";
 
 const Wordle = () => {
   const {
@@ -66,6 +67,18 @@ const Wordle = () => {
       <dialog data-results className="border rounded-lg ">
         {isGameOver && !isLoss && (
           <div>
+            <div className="flex justify-end items-center w-full pb-2">
+              <button
+                onClick={() => {
+                  const modal = document.querySelector(
+                    "[data-results]"
+                  ) as HTMLDialogElement;
+                  modal?.close();
+                }}
+              >
+                <MdOutlineCancel size={25} />
+              </button>
+            </div>
             <span>Congratulations! You got the word </span>
             <span className="bg-green-300 px-1 rounded-md font-bold">
               {solution}
