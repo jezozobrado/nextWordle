@@ -1,3 +1,4 @@
+import useDelayStore from "@app/wordle/store/delay";
 import useIsGameOverStore from "@app/wordle/store/gameOver";
 import useWordleStore from "@app/wordle/store/wordle";
 import React, { useState } from "react";
@@ -13,14 +14,16 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
   const currentGuess = useWordleStore((s) => s.currentGuess);
   const setCurrentGuess = useWordleStore((s) => s.setCurrentGuess);
   const popCurrentGuess = useWordleStore((s) => s.popCurrentGuess);
+  const delay = useDelayStore((s) => s.delay);
 
   const [debouncedkeyColorMap, setDebouncedkeyColorMap] = useState(
     {} as { [letter: string]: string }
   );
 
-  useDebounce(() => setDebouncedkeyColorMap(keyColorMap), 1250, [keyColorMap]);
+  useDebounce(() => setDebouncedkeyColorMap(keyColorMap), delay, [keyColorMap]);
 
   const isGameOver = useIsGameOverStore((s) => s.isGameOver);
+
   return (
     <div className="flex w-[600px] justify-between gap-1">
       {keys.map((letter, i) => (
@@ -38,7 +41,6 @@ const KeyboardLine = ({ keys, keyColorMap }: Props) => {
 
             if (currentGuess.length >= 5) return;
             setCurrentGuess(letter);
-            console.log("x", currentGuess);
           }}
           key={i}
           className="border h-10 flex justify-center items-center rounded-md flex-auto"
