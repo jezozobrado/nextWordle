@@ -1,12 +1,16 @@
 "use client";
 
 import React from "react";
-import Line from "@components/Line";
-import Keyboard from "@components/Keyboard";
+
+import Keyboard from "@components/wordle/Keyboard";
 import KEYS from "@constants/keyboard";
 import { useWordle } from "./useWordle";
-import LineResults from "@components/LineResults";
+
 import { MdOutlineCancel } from "react-icons/md";
+import Line from "@components/wordle/Line";
+import LineResults from "@components/wordle/LineResults";
+import PlayAgainButton from "@components/wordle/PlayAgainButton";
+import Delayed from "@components/Delayed";
 
 const Wordle = () => {
   const {
@@ -90,52 +94,63 @@ const Wordle = () => {
                 return <LineResults key={i} color={colors[i]} />;
               })}
             </div>
-            <button
-              className="black_btn m-auto mt-5"
-              onClick={() => {
-                handleRestart();
-                handleCloseModal();
-              }}
-            >
-              Play again
-            </button>
+            <div className="flex w-full justify-center mt-4">
+              <PlayAgainButton
+                handleRestart={handleRestart}
+                handleCloseModal={handleCloseModal}
+              />
+            </div>
           </div>
         )}
         {guesses[5] !== null && !isGameOver && (
           <div>
+            <div className="flex justify-end items-center w-full pb-2">
+              <button
+                onClick={() => {
+                  handleCloseModal();
+                }}
+              >
+                <MdOutlineCancel size={25} />
+              </button>
+            </div>
             <span>{`Oops, the word is `}</span>
             <span className="bg-green-300 px-1 rounded-md font-bold">
               {solution}
             </span>
-            <button
-              className="black_btn m-auto mt-5"
-              onClick={() => {
-                handleRestart();
-                handleCloseModal();
-              }}
-            >
-              Play again
-            </button>
+            <div className="flex w-full justify-center mt-4">
+              <PlayAgainButton
+                handleRestart={handleRestart}
+                handleCloseModal={handleCloseModal}
+              />
+            </div>
           </div>
         )}
       </dialog>
 
       <Keyboard colors={keys} />
 
-      {isGameOver && (
-        <button
-          className="black_btn"
-          onClick={() => {
-            const modal = document.querySelector(
-              "[data-results]"
-            ) as HTMLDialogElement;
-            modal.inert = true;
-            modal.showModal();
-            modal.inert = false;
-          }}
-        >
-          See Results
-        </button>
+      {(isGameOver || isLoss) && (
+        <Delayed>
+          <div className="flex justify-between items-center w-[250px]">
+            <button
+              className="black_btn"
+              onClick={() => {
+                const modal = document.querySelector(
+                  "[data-results]"
+                ) as HTMLDialogElement;
+                modal.inert = true;
+                modal.showModal();
+                modal.inert = false;
+              }}
+            >
+              See results
+            </button>
+            <PlayAgainButton
+              handleRestart={handleRestart}
+              handleCloseModal={handleCloseModal}
+            />
+          </div>
+        </Delayed>
       )}
     </section>
   );
