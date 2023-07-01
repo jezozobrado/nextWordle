@@ -11,7 +11,7 @@ const LineResults = ({ color }: Props) => {
     tiles.push(
       <div
         key={i}
-        className={`w-8 h-8 border border-solid border-black `}
+        className={`w-8 h-8 border border-solid `}
         style={{ background: color[i] }}
       >
         &nbsp;
