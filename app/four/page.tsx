@@ -13,7 +13,7 @@ const Four = () => {
   );
 
   const colors = useMemo(
-    () => ["lightgreen", "lightyellow", "dodgerblue", "tomato"],
+    () => ["lightcoral", "sandybrown", "mediumaquamarine", "lightblue"],
     []
   );
 
@@ -30,17 +30,36 @@ const Four = () => {
 
     if (stringifiedSolution.includes(stringifiedGuess)) {
       console.log(guesses);
-      for (let i = 0; i < 4; i++) {
-        const tile = document.getElementById(guesses[i]);
-        if (!tile) return;
-        tile.style.backgroundColor = colors[correctCount];
-      }
+      // for (let i = 0; i < 4; i++) {
+      //   const tile = document.getElementById(guesses[i]);
+      //   if (!tile) return;
+      //   tile.style.backgroundColor = colors[correctCount];
+      // }
       setShuffledSolution((old) => old?.filter((o) => !guesses.includes(o)));
       setCorrectGuesses((o) => [...o, guesses]);
-      setGuesses([]);
-      setCorrectCount((o) => o + 1);
     }
   };
+
+  useEffect(() => {
+    const container = document.getElementById("container");
+    const children = container && container.children;
+    if (!children) return;
+    console.log(container?.children);
+
+    for (let i = correctGuesses.flat(2).length; i < children.length; i++) {
+      let child = children[i] as HTMLElement;
+      child.style.removeProperty("background-color");
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const tile = document.getElementById(guesses[i]);
+      if (!tile) return;
+      tile.style.backgroundColor = colors[correctCount];
+    }
+
+    setGuesses([]);
+    setCorrectCount((o) => o + 1);
+  }, [shuffledSolution]);
 
   useEffect(() => {
     solution.map((s) => s.sort());
@@ -53,7 +72,10 @@ const Four = () => {
 
   return (
     <>
-      <div className="grid grid-cols-4 grid-rows-4 w-[500px] m-auto gap-2 h-[250px]">
+      <div
+        className="grid grid-cols-4 grid-rows-4 w-[500px] m-auto gap-2 h-[250px]"
+        id="container"
+      >
         {correctGuesses.flat(2).map((word, i) => (
           <div
             key={i}
