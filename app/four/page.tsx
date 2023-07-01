@@ -20,6 +20,8 @@ const Four = () => {
   const [shuffledSolution, setShuffledSolution] = useState<string[]>();
   const [guesses, setGuesses] = useState<string[]>([]);
   const [correctCount, setCorrectCount] = useState(0);
+  const [correctGuesses, setCorrectGuesses] = useState<string[][]>([]);
+  console.log(correctGuesses);
 
   const handleSubmit = (guesses: string[], solution: string[][]) => {
     console.log("clicked");
@@ -33,6 +35,8 @@ const Four = () => {
         if (!tile) return;
         tile.style.backgroundColor = colors[correctCount];
       }
+      setShuffledSolution((old) => old?.filter((o) => !guesses.includes(o)));
+      setCorrectGuesses((o) => [...o, guesses]);
       setGuesses([]);
       setCorrectCount((o) => o + 1);
     }
@@ -50,6 +54,15 @@ const Four = () => {
   return (
     <>
       <div className="grid grid-cols-4 grid-rows-4 w-[500px] m-auto gap-2 h-[250px]">
+        {correctGuesses.flat(2).map((word, i) => (
+          <div
+            key={i}
+            id={word}
+            className="border flex justify-center items-center rounded-md"
+          >
+            {word.toUpperCase()}
+          </div>
+        ))}
         {shuffledSolution?.map((word, i) => (
           <div
             key={i}
