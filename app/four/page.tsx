@@ -13,18 +13,9 @@ const Four = () => {
   );
 
   const [shuffledSolution, setShuffledSolution] = useState<string[]>();
+  const [guessCount, setGuessCount] = useState(0);
 
   useEffect(() => setShuffledSolution(shuffleArray(solution.flat(2))), []);
-
-  console.log(solution.flat(2));
-
-  function shuffleArray(arr: string[]) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
 
   useEffect(() => {
     shuffleArray(solution.flat(2));
@@ -41,11 +32,16 @@ const Four = () => {
             const tile = document.getElementById(`tile-${i}`);
 
             if (!tile) return;
+
             if (tile.style.backgroundColor) {
               tile.style.removeProperty("background-color");
-            } else {
-              tile.style.backgroundColor = "lightgray";
+              setGuessCount((oldCount) => oldCount - 1);
+              return;
             }
+
+            if (guessCount >= 4) return;
+            tile.style.backgroundColor = "lightgray";
+            setGuessCount((oldCount) => oldCount + 1);
           }}
         >
           {word.toUpperCase()}
@@ -54,5 +50,13 @@ const Four = () => {
     </div>
   );
 };
+
+function shuffleArray(arr: string[]) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
 export default Four;
