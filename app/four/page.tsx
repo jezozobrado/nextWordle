@@ -79,7 +79,9 @@ const Four = () => {
             id={String(i)}
             className=" flex justify-center items-center content-center rounded-md col-span-4 flex-col"
           >
-            <span className="font-bold">{rawSolution[i][4]}</span>
+            <span className="font-bold">
+              {rawSolution.find((r) => r.includes(correctGuesses[i][0]))?.[4]}
+            </span>
             <span>{words.join(", ").toUpperCase()}</span>
           </div>
         ))}
