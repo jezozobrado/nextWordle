@@ -14,12 +14,10 @@ const Four = () => {
     []
   );
 
-  console.log(rawSolution);
-
   const [solution, setSolution] = useState<string[][]>([]);
   const [shuffledSolution, setShuffledSolution] = useState<string[]>();
   const [guesses, setGuesses] = useState<string[]>([]);
-  const [correctCount, setCorrectCount] = useState(0);
+
   const [correctGuesses, setCorrectGuesses] = useState<string[][]>([]);
 
   const handleSubmit = (guesses: string[], solution: string[][]) => {
@@ -39,8 +37,6 @@ const Four = () => {
         let child = children[i] as HTMLElement;
         child.style.removeProperty("background-color");
       }
-
-      setCorrectCount((o) => o + 1);
     }
   };
 
@@ -63,10 +59,6 @@ const Four = () => {
     setShuffledSolution(shuffleArray(solution.flat(2)));
   }, [solution]);
 
-  useEffect(() => {
-    shuffleArray(solution.flat(2));
-  }, []);
-
   return (
     <>
       <div
@@ -85,38 +77,41 @@ const Four = () => {
             <span>{words.join(", ").toUpperCase()}</span>
           </div>
         ))}
-        {/* {correctGuesses.flat(2).map((word, i) => (
-          <div
-            key={i}
-            id={word}
-            className="border flex justify-center items-center rounded-md"
-          >
-            {word.toUpperCase()}
-          </div>
-        ))} */}
+
         {shuffledSolution?.map((word, i) => (
           <div
             key={i}
             id={word}
             className="border flex justify-center items-center rounded-md cursor-pointer"
+            onAnimationEnd={() => {
+              const tile = document.getElementById(word);
+
+              if (!tile) return;
+
+              tile.style.removeProperty("animation");
+            }}
             onClick={() => {
               const tile = document.getElementById(word);
 
               if (!tile) return;
 
-              if (tile.style.backgroundColor === "lightgreen") return;
-
-              if (tile.style.backgroundColor === "lightgray") {
+              if (tile.style.backgroundColor === "gray") {
                 tile.style.removeProperty("background-color");
-
+                tile.style.animation = "mouseDown 0.15s";
                 setGuesses((g) => g.filter((x) => x !== word));
                 return;
               }
 
               if (guesses?.length >= 4) return;
 
-              tile.style.backgroundColor = "lightgray";
+              tile.style.animation = "mouseDown 0.15s";
+              tile.style.backgroundColor = "gray";
               setGuesses((g) => [...g, word]);
+            }}
+            onMouseUp={() => {
+              const tile = document.getElementById(word);
+              if (!tile) return;
+              tile.style.removeProperty("animation");
             }}
           >
             {word.toUpperCase()}
