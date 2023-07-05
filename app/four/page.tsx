@@ -1,5 +1,7 @@
 "use client";
+import { spawn } from "child_process";
 import React, { useEffect, useMemo, useState } from "react";
+import { GoDotFill, GoDot } from "react-icons/go";
 
 const Four = () => {
   const rawSolution = [
@@ -19,12 +21,11 @@ const Four = () => {
   const [guesses, setGuesses] = useState<string[]>([]);
 
   const [correctGuesses, setCorrectGuesses] = useState<string[][]>([]);
+  const [attempts, setAttempts] = useState(4);
 
   const handleSubmit = (guesses: string[], solution: string[][]) => {
     const stringifiedSolution = solution.map((s) => s.join(""));
     const stringifiedGuess = guesses.sort().join("");
-
-    console.log(guesses);
 
     if (stringifiedSolution.includes(stringifiedGuess)) {
       setShuffledSolution((old) => old?.filter((o) => !guesses.includes(o)));
@@ -45,6 +46,7 @@ const Four = () => {
         if (!tile) break;
         tile.style.animation = "wrongAnimation 0.4s";
       }
+      setAttempts((attempt) => attempt - 1);
     }
   };
 
@@ -126,6 +128,20 @@ const Four = () => {
             {word.toUpperCase()}
           </div>
         ))}
+      </div>
+      <div className="flex flex-row gap-2 items-center justify-center mt-4">
+        <span>Attempts remaining:</span>
+
+        {Array(attempts)
+          .fill("")
+          .map((_, i) => (
+            <GoDotFill key={i} />
+          ))}
+        {Array(4 - attempts)
+          .fill("")
+          .map((_, i) => (
+            <GoDot key={i} />
+          ))}
       </div>
       <div className="flex w-full justify-center items-center mt-5 gap-2">
         <button
