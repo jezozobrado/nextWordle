@@ -24,6 +24,8 @@ const Four = () => {
     const stringifiedSolution = solution.map((s) => s.join(""));
     const stringifiedGuess = guesses.sort().join("");
 
+    console.log(guesses);
+
     if (stringifiedSolution.includes(stringifiedGuess)) {
       setShuffledSolution((old) => old?.filter((o) => !guesses.includes(o)));
       setCorrectGuesses((o) => [...o, guesses]);
@@ -36,6 +38,12 @@ const Four = () => {
       for (let i = 0; i < children.length; i++) {
         let child = children[i] as HTMLElement;
         child.style.removeProperty("background-color");
+      }
+    } else {
+      for (let i = 0; i < 4; i++) {
+        const tile = document.getElementById(guesses[i]);
+        if (!tile) break;
+        tile.style.animation = "wrongAnimation 0.4s";
       }
     }
   };
@@ -61,6 +69,9 @@ const Four = () => {
 
   return (
     <>
+      <span className="flex justify-center mb-3 font-medium">
+        Create four groups of fours.
+      </span>
       <div
         className="grid grid-cols-4 grid-rows-4 w-[550px] m-auto gap-2 h-[300px]"
         id="container"
@@ -86,9 +97,7 @@ const Four = () => {
             onAnimationEnd={() => {
               const tile = document.getElementById(word);
 
-              if (!tile) return;
-
-              tile.style.removeProperty("animation");
+              tile?.style.removeProperty("animation");
             }}
             onClick={() => {
               const tile = document.getElementById(word);
@@ -122,7 +131,9 @@ const Four = () => {
         <button
           disabled={guesses.length !== 4}
           className="black_btn"
-          onClick={() => handleSubmit(guesses, solution)}
+          onClick={() => {
+            handleSubmit(guesses, solution);
+          }}
         >
           Submit
         </button>

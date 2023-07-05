@@ -64,3 +64,18 @@
     transform: scale(1);
   }
 }
+
+@keyframes wrongAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  33% {
+    transform: translateX(-8px);
+  }
+  66% {
+    transform: translateX(8px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
