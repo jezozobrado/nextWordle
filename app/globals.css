@@ -85,3 +85,12 @@
     transform: translateX(0);
   }
 }
+
+@keyframes correctAnimation {
+  0% {
+    transform: translateY(var(--movementY));
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}

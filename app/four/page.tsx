@@ -16,6 +16,13 @@ const Four = () => {
     []
   );
 
+  const animationMap: { [key: string]: string } = {
+    0: "270px",
+    1: "170px",
+    2: "70px",
+    3: "0px",
+  };
+
   const [solution, setSolution] = useState<string[][]>([]);
   const [shuffledSolution, setShuffledSolution] = useState<string[]>();
   const [guesses, setGuesses] = useState<string[]>([]);
@@ -82,7 +89,13 @@ const Four = () => {
           <div
             key={i}
             id={String(i)}
-            className=" flex justify-center items-center content-center rounded-md col-span-4 flex-col"
+            className={`flex justify-center items-center content-center rounded-md col-span-4 flex-col animate-riseUp`}
+            style={
+              {
+                animation: "correctAnimation 1s",
+                "--movementY": animationMap[i],
+              } as React.CSSProperties
+            }
           >
             <span className="font-bold">
               {rawSolution.find((r) => r.includes(correctGuesses[i][0]))?.[4]}

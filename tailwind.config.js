@@ -22,9 +22,14 @@ module.exports = {
           },
           "100%": { transform: "rotateX(0))", background: "var(--background)" },
         },
+        riseUp: {
+          "0%": { transform: "translateY(var(--yMovement))" },
+          "100%": { transform: "translateY(0px)" },
+        },
       },
       animation: {
         wordle: "wordle 0.6s ease forwards",
+        riseUp: "riseUp 0.6s ease",
       },
     },
   },
