@@ -6,11 +6,24 @@ import useFourStore from "./store/guesses";
 import DefaultRow from "@components/four/DefaultRow";
 
 const Four = () => {
+  // const rawSolution = [
+  //   ["full", "king", "twin", "queen", "Bed sizes"],
+  //   ["gnat", "gnome", "gnocchi", "gnaw", "Words with silent G"],
+  //   ["gnu", "knew", "new", "nu", "Homophones"],
+  //   ["garlic", "mirror", "crucifix", "sunlight", "Anti-vampire"],
+  // ];
+
   const rawSolution = [
-    ["full", "king", "twin", "queen", "Bed sizes"],
-    ["gnat", "gnome", "gnocchi", "gnaw", "Words with silent G"],
-    ["gnu", "knew", "new", "nu", "Homophones"],
-    ["garlic", "mirror", "crucifix", "sunlight", "Anti-vampire"],
+    [
+      "mandaluyong",
+      "makati",
+      "muntinlupa",
+      "marikina",
+      "NCR cities that start with M",
+    ],
+    ["bond", "manila", "wall", "yellow", "_______ paper"],
+    ["home", "enter", "control", "end", "Keyboard keys"],
+    ["time", "airplane", "balloon", "drone", "Things that fly"],
   ];
 
   const colors = useMemo(
@@ -20,9 +33,8 @@ const Four = () => {
 
   const [solution, setSolution] = useState<string[][]>([]);
   const [shuffledSolution, setShuffledSolution] = useState<string[]>();
-  // const [guesses, setGuesses] = useState<string[]>([]);
+
   const guesses = useFourStore((s) => s.guesses);
-  const setGuesses = useFourStore((s) => s.setGuesses);
   const resetGuesses = useFourStore((s) => s.resetGuesses);
 
   const [correctGuesses, setCorrectGuesses] = useState<string[][]>([]);
@@ -31,6 +43,15 @@ const Four = () => {
   const handleSubmit = (guesses: string[], solution: string[][]) => {
     const stringifiedSolution = solution.map((s) => s.join(""));
     const stringifiedGuess = guesses.sort().join("");
+
+    if (!attempts) {
+      for (let x of solution) {
+        console.log(x);
+      }
+      console.log("pota", shuffledSolution, correctGuesses);
+
+      return;
+    }
 
     if (stringifiedSolution.includes(stringifiedGuess)) {
       setShuffledSolution((old) => old?.filter((o) => !guesses.includes(o)));
@@ -44,6 +65,7 @@ const Four = () => {
       for (let i = 0; i < children.length; i++) {
         let child = children[i] as HTMLElement;
         child.style.removeProperty("background-color");
+        // child.classList.add("animate-fadeInUp");
       }
     } else {
       for (let i = 0; i < 4; i++) {
@@ -80,7 +102,7 @@ const Four = () => {
         Create four groups of fours.
       </span>
       <div
-        className="grid grid-cols-4 grid-rows-4 w-[550px] m-auto gap-2 h-[300px]"
+        className="grid grid-cols-4 grid-rows-4 w-[600px] m-auto gap-2 h-[300px]"
         id="container"
       >
         <CorrectRow correctGuesses={correctGuesses} rawSolution={rawSolution} />

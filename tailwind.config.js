@@ -26,10 +26,15 @@ module.exports = {
           "0%": { transform: "translateY(var(--yMovement))" },
           "100%": { transform: "translateY(0px)" },
         },
+        fadeInUp: {
+          "0%": { transform: "translateY(40px)", opacity: 0 },
+          "100%": { transform: "translateY(0)", opacity: 1 },
+        },
       },
       animation: {
         wordle: "wordle 0.6s ease forwards",
         riseUp: "riseUp 0.6s ease",
+        fadeInUp: "fadeInUp 1s ease",
       },
     },
   },

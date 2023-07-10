@@ -18,16 +18,18 @@ const CorrectRow = ({ correctGuesses, rawSolution }: Props) => {
         <div
           key={i}
           id={String(i)}
-          className={`flex justify-center items-center content-center rounded-md col-span-4 flex-col animate-riseUp`}
+          className={`flex justify-center items-center content-center rounded-md col-span-4 flex-col `}
           style={
             {
-              animation: "correctAnimation 0.6s",
+              animation: "correctAnimation 0.8s",
               "--movementY": animationMap[i],
             } as React.CSSProperties
           }
         >
           <span className="font-bold">
-            {rawSolution.find((r) => r.includes(correctGuesses[i][0]))?.[4]}
+            {rawSolution
+              .find((r) => r.includes(correctGuesses[i][0]))?.[4]
+              .toUpperCase()}
           </span>
           <span>{words.join(", ").toUpperCase()}</span>
         </div>
